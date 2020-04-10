@@ -1,11 +1,10 @@
-package com.github.leammas
-
+package com.github.leammas.whatRepeat
 import cats.{Functor, Monad}
 import cats.data.NonEmptyList
 import cats.effect.concurrent.Ref
 import cats.implicits._
 
-package object commutativity {
+package object demo {
 
   final case class OrderItem(name: String)
 

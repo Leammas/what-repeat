@@ -1,4 +1,4 @@
-package com.github.leammas.commutativity
+package com.github.leammas.whatRepeat.demo
 
 import cats.data.NonEmptyList
 import cats.effect.Sync
