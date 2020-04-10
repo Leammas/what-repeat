@@ -1,10 +1,10 @@
 package com.github.leammas.whatRepeat.demo
 
-import cats.data.NonEmptyList
 import cats.effect.Sync
 import cats.implicits._
 import cats.effect.concurrent.Ref
 import com.github.leammas.whatRepeat.DemoCase
+import com.github.leammas.whatRepeat.demo.Common._
 
 object UnimportantOrderingProcess {
 
@@ -21,11 +21,11 @@ object UnimportantOrderingProcess {
           Map.empty)
         orderRepo1 = new InMemoryOrderRepo[F](orderRef1)
         orderRepo2 = new InMemoryOrderRepo[F](orderRef2)
-        e1 = OrderCreated("1", NonEmptyList.of(OrderItem("foo")))
-        e2 = OrderPaid("1")
-        result1 <- run(orderRepo1)(e1) >> run(orderRepo1)(e2) >> orderRepo1.get(
+        run1 = run(orderRepo1)
+        run2 = run(orderRepo2)
+        result1 <- stream1[F].evalMap(run1).compile.drain >> orderRepo1.get(
           "1")
-        result2 <- run(orderRepo2)(e2) >> run(orderRepo2)(e1) >> orderRepo2.get(
+        result2 <- stream2[F].evalMap(run2).compile.drain >> orderRepo2.get(
           "1")
         _ <- F.delay(println(result1))
         _ <- F.delay(println(result2))

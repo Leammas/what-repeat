@@ -1,10 +1,12 @@
 package com.github.leammas.whatRepeat
-import cats.{Functor, Monad}
+import cats.{Functor, Monad, MonadError}
 import cats.data.NonEmptyList
 import cats.effect.concurrent.Ref
 import cats.implicits._
 
 package object demo {
+
+  type MonadThrowable[F[_]] = MonadError[F, Throwable]
 
   final case class OrderItem(name: String)
 

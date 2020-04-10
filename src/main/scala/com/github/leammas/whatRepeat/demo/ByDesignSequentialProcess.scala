@@ -1,15 +1,12 @@
 package com.github.leammas.whatRepeat.demo
 
-import cats.MonadError
-import cats.data.NonEmptyList
 import cats.effect.Sync
 import cats.effect.concurrent.Ref
 import cats.implicits._
 import com.github.leammas.whatRepeat.DemoCase
+import com.github.leammas.whatRepeat.demo.Common._
 
 object ByDesignSequentialProcess {
-
-  type MonadThrowable[F[_]] = MonadError[F, Throwable]
 
   def run[F[_]: MonadThrowable](
       repo: PaidItemCounter[F]): OrderEvent => F[Unit] =
@@ -30,12 +27,13 @@ object ByDesignSequentialProcess {
         totalRef2 <- Ref.of[F, Int](0)
         itemCounter1 = new InMemoryItemCounter[F](orderItemCountRef1, totalRef1)
         itemCounter2 = new InMemoryItemCounter[F](orderItemCountRef2, totalRef2)
-        e1 = OrderCreated("1", NonEmptyList.of(OrderItem("foo")))
-        e2 = OrderPaid("1")
         run1 = run(itemCounter1)
         run2 = run(itemCounter2)
-        result1 <- run1(e1) >> run1(e2) >> itemCounter1.getCount
-        result2 <- run2(e2).handleError(_ => ()) >> run2(e1) >> itemCounter2.getCount
+        result1 <- stream1[F].evalMap(run1).compile.drain >> itemCounter1.getCount
+        result2 <- stream2[F]
+          .evalMap(run2)
+          .compile
+          .drain.handleError(_ => ()) >> itemCounter2.getCount
         _ <- F.delay(println(result1))
         _ <- F.delay(println(result2))
       } yield ()
