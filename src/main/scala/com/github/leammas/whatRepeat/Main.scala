@@ -1,8 +1,7 @@
-package com.github.leammas
+package com.github.leammas.whatRepeat
 
 import cats.effect.{ExitCode, IO, IOApp}
 import com.github.leammas.commutativity.{ByDesignSequentialProcess, UnimportantOrderingProcess}
-import cats.implicits._
 
 object Main extends IOApp {
 

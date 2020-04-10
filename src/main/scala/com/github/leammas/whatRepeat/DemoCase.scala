@@ -1,4 +1,4 @@
-package com.github.leammas
+package com.github.leammas.whatRepeat
 
 trait DemoCase[F[_]] {
 

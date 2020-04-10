@@ -5,7 +5,7 @@ import cats.data.NonEmptyList
 import cats.effect.Sync
 import cats.effect.concurrent.Ref
 import cats.implicits._
-import com.github.leammas.DemoCase
+import com.github.leammas.whatRepeat.DemoCase
 
 object ByDesignSequentialProcess {
 
